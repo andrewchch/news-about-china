@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Test script to demonstrate functionality with sample data."""
 
-from datetime import datetime, timedelta
-from rss_fetcher import Article
+from datetime import datetime, timedelta, timezone
+from rss_fetcher import Article, RSSFetcher
 from sentiment_analyzer import SentimentAnalyzer
 from site_generator import SiteGenerator
 from config import CHINA_KEYWORDS
@@ -68,8 +68,72 @@ def create_sample_articles():
     }
     return articles
 
+def test_timezone_normalization():
+    """Test timezone-aware datetime normalization."""
+    print("=" * 60)
+    print("Testing Timezone Normalization")
+    print("=" * 60)
+    
+    # Test 1: Article with naive datetime should be normalized to UTC
+    naive_datetime = datetime(2024, 1, 15, 12, 0, 0)
+    article_naive = Article(
+        title="Test Article with Naive Datetime",
+        link="https://example.com/test1",
+        published=naive_datetime,
+        description="Test description",
+        source="Test Source"
+    )
+    assert article_naive.published.tzinfo is not None, "Article published datetime should be timezone-aware"
+    assert article_naive.published.tzinfo == timezone.utc, "Article published datetime should be UTC"
+    print("✓ Test 1 passed: Article with naive datetime normalized to UTC")
+    
+    # Test 2: Article with aware datetime should be converted to UTC
+    aware_datetime = datetime(2024, 1, 15, 12, 0, 0, tzinfo=timezone(timedelta(hours=5)))
+    article_aware = Article(
+        title="Test Article with Aware Datetime",
+        link="https://example.com/test2",
+        published=aware_datetime,
+        description="Test description",
+        source="Test Source"
+    )
+    assert article_aware.published.tzinfo == timezone.utc, "Article published datetime should be converted to UTC"
+    print("✓ Test 2 passed: Article with aware datetime converted to UTC")
+    
+    # Test 3: RSSFetcher cutoff_date should be timezone-aware
+    fetcher = RSSFetcher(months_back=12)
+    assert fetcher.cutoff_date.tzinfo is not None, "RSSFetcher cutoff_date should be timezone-aware"
+    assert fetcher.cutoff_date.tzinfo == timezone.utc, "RSSFetcher cutoff_date should be UTC"
+    print("✓ Test 3 passed: RSSFetcher cutoff_date is timezone-aware UTC")
+    
+    # Test 4: _is_recent should work with timezone-aware datetimes
+    recent_article = Article(
+        title="Recent Article",
+        link="https://example.com/recent",
+        published=datetime.now(timezone.utc) - timedelta(days=30),
+        description="Recent test",
+        source="Test"
+    )
+    old_article = Article(
+        title="Old Article",
+        link="https://example.com/old",
+        published=datetime.now(timezone.utc) - timedelta(days=400),
+        description="Old test",
+        source="Test"
+    )
+    assert fetcher._is_recent(recent_article), "Recent article should pass _is_recent check"
+    assert not fetcher._is_recent(old_article), "Old article should not pass _is_recent check"
+    print("✓ Test 4 passed: _is_recent works correctly with timezone-aware comparisons")
+    
+    print("=" * 60)
+    print("✅ All timezone normalization tests passed!")
+    print("=" * 60)
+    print()
+
 def main():
     """Test the sentiment analysis pipeline with sample data."""
+    # Run timezone normalization tests first
+    test_timezone_normalization()
+    
     print("=" * 60)
     print("Testing China News Sentiment Analysis")
     print("=" * 60)
