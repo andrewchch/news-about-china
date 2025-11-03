@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+"""Test script to demonstrate functionality with sample data."""
+
+from datetime import datetime, timedelta
+from rss_fetcher import Article
+from sentiment_analyzer import SentimentAnalyzer
+from site_generator import SiteGenerator
+from config import CHINA_KEYWORDS
+
+def create_sample_articles():
+    """Create sample articles for testing."""
+    articles = {
+        "BBC News": [
+            Article(
+                title="China announces major economic reforms",
+                link="https://example.com/article1",
+                published=datetime.now() - timedelta(days=30),
+                description="China has unveiled a comprehensive package of economic reforms aimed at boosting growth and innovation in key sectors.",
+                source="BBC News"
+            ),
+            Article(
+                title="Tensions rise over Taiwan strait incident",
+                link="https://example.com/article2",
+                published=datetime.now() - timedelta(days=15),
+                description="Military tensions escalated today following reports of increased activity near Taiwan, raising concerns among international observers.",
+                source="BBC News"
+            ),
+            Article(
+                title="Beijing hosts successful international summit",
+                link="https://example.com/article3",
+                published=datetime.now() - timedelta(days=5),
+                description="Leaders from around the world gathered in Beijing for a landmark summit on climate cooperation, marking a significant diplomatic achievement.",
+                source="BBC News"
+            ),
+        ],
+        "CNN": [
+            Article(
+                title="US-China trade relations show signs of improvement",
+                link="https://example.com/article4",
+                published=datetime.now() - timedelta(days=20),
+                description="Recent diplomatic efforts have led to positive developments in trade negotiations between Washington and Beijing.",
+                source="CNN"
+            ),
+            Article(
+                title="Hong Kong protests continue amid political uncertainty",
+                link="https://example.com/article5",
+                published=datetime.now() - timedelta(days=60),
+                description="Demonstrators in Hong Kong continued their protests today, calling for greater democratic freedoms and expressing concerns over recent policy changes.",
+                source="CNN"
+            ),
+        ],
+        "The Guardian": [
+            Article(
+                title="China's tech sector faces new regulatory challenges",
+                link="https://example.com/article6",
+                published=datetime.now() - timedelta(days=10),
+                description="Technology companies in China are grappling with stricter government regulations as authorities seek to address concerns over data security and market dominance.",
+                source="The Guardian"
+            ),
+            Article(
+                title="Shanghai emerges as global innovation hub",
+                link="https://example.com/article7",
+                published=datetime.now() - timedelta(days=45),
+                description="Shanghai continues to attract international businesses and startups, solidifying its position as a leading center for technology and innovation in Asia.",
+                source="The Guardian"
+            ),
+        ],
+    }
+    return articles
+
+def main():
+    """Test the sentiment analysis pipeline with sample data."""
+    print("=" * 60)
+    print("Testing China News Sentiment Analysis")
+    print("=" * 60)
+    
+    # Create sample articles
+    print("\nCreating sample articles...")
+    articles_by_source = create_sample_articles()
+    
+    total_articles = sum(len(articles) for articles in articles_by_source.values())
+    print(f"Created {total_articles} sample articles across {len(articles_by_source)} sources")
+    
+    # Analyze sentiment
+    print("\nAnalyzing sentiment...")
+    analyzer = SentimentAnalyzer(CHINA_KEYWORDS)
+    
+    for source, articles in articles_by_source.items():
+        analyzed = analyzer.analyze_articles(articles)
+        articles_by_source[source] = analyzed
+        
+        print(f"\n{source}:")
+        for article in analyzed:
+            print(f"  - {article.title[:50]}...")
+            print(f"    Sentiment: {article.sentiment_label} ({article.sentiment_score})")
+    
+    # Generate site
+    print("\n" + "=" * 60)
+    print("Generating test site...")
+    generator = SiteGenerator(output_dir="site_test")
+    generator.generate_index_page(articles_by_source)
+    generator.generate_source_pages(articles_by_source)
+    
+    print("✅ Test site generated successfully!")
+    print("📁 Output directory: site_test/")
+    print("=" * 60)
+
+if __name__ == "__main__":
+    main()
