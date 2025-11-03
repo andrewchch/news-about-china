@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """End-to-end test to validate that filtering removes articles without 'China' or 'Xi'."""
 
+import re
 from datetime import datetime, timedelta
 from rss_fetcher import Article
 from sentiment_analyzer import SentimentAnalyzer
@@ -105,7 +106,7 @@ def test_end_to_end_filtering():
     for article in filtered:
         full_text = f"{article.title} {article.description}".lower()
         has_china = "china" in full_text
-        has_xi = "xi" in full_text
+        has_xi = bool(re.search(r'\bxi\b', full_text))
         
         if has_china or has_xi:
             print(f"  ✓ {article.title[:50]}...")
@@ -118,7 +119,7 @@ def test_end_to_end_filtering():
     for article in excluded:
         full_text = f"{article.title} {article.description}".lower()
         has_china = "china" in full_text
-        has_xi = "xi" in full_text
+        has_xi = bool(re.search(r'\bxi\b', full_text))
         
         if not has_china and not has_xi:
             print(f"  ✓ {article.title[:50]}...")

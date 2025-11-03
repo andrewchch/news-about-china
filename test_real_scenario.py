@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Test realistic scenario with articles similar to test_example.py."""
 
+import re
 from datetime import datetime, timedelta
 from rss_fetcher import Article
 from sentiment_analyzer import SentimentAnalyzer
@@ -73,7 +74,7 @@ def test_real_scenario():
     for i, article in enumerate(articles, 1):
         full_text = f"{article.title} {article.description}".lower()
         has_china = "china" in full_text
-        has_xi = "xi" in full_text
+        has_xi = bool(re.search(r'\bxi\b', full_text))
         has_other = any(kw in full_text for kw in ["taiwan", "beijing", "hong kong", "shanghai"])
         
         print(f"\n{i}. {article.title}")
