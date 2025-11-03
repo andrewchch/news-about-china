@@ -33,6 +33,9 @@ jobs:
         run: |
           python -m pip install -U pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # Install spaCy language model required for sentiment analysis
+          # Using direct pip install to avoid download issues in CI
+          pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
 
       - name: Generate site
         env:
@@ -41,25 +44,36 @@ jobs:
           set -euo pipefail
           mkdir -p "$OUTPUT_DIR"
 
-          # Preferred: if your generator supports an explicit output argument, use it.
-          # We try to detect common flags from --help and use them; otherwise run as-is.
-          if python site_generator.py --help 2>&1 | grep -E -- '--output|-o|--output-dir'; then
-            (python site_generator.py --output "$OUTPUT_DIR" 2>/dev/null) || \
-            (python site_generator.py -o "$OUTPUT_DIR" 2>/dev/null) || \
-            (python site_generator.py --output-dir "$OUTPUT_DIR" 2>/dev/null) || \
-            python site_generator.py
-          else
-            python site_generator.py
-          fi
+          # ADJUSTMENT GUIDE:
+          # The site_generator.py currently outputs to a directory specified in config.py (default: "site").
+          # If your generator supports an explicit output argument, you can simplify this step:
+          # - Check if it accepts flags like --output, -o, or --output-dir
+          # - If so, call: python main.py --output "$OUTPUT_DIR"
+          # - Remove the discovery and copy logic below
+          
+          # For now, we run the generator as-is and then move the output to dist/
+          python main.py
 
-          # If the script wrote elsewhere, try to discover common output dirs and copy into dist/
-          for d in "$OUTPUT_DIR" output site public build docs; do
-            if [ -d "$d" ] && [ "$d" != "$OUTPUT_DIR" ]; then
-              cp -a "$d"/. "$OUTPUT_DIR"/ || true
+          # Discover where the generator wrote files and copy them into dist/
+          # Common output directories: site, output, public, build, docs
+          for d in site output public build docs; do
+            if [ -d "$d" ] && [ "$d" != "$OUTPUT_DIR" ] && [ -n "$(ls -A "$d" 2>/dev/null)" ]; then
+              echo "Copying contents from $d/ to $OUTPUT_DIR/"
+              if ! cp -a "$d"/. "$OUTPUT_DIR"/; then
+                echo "Warning: Failed to copy from $d/, continuing..."
+              fi
             fi
           done
 
           # Ensure an index.html exists at the root of dist/
+          if [ ! -f "$OUTPUT_DIR/index.html" ]; then
+            echo "ERROR: No index.html found in $OUTPUT_DIR/"
+            ls -la "$OUTPUT_DIR/"
+            exit 1
+          fi
+          
+          echo "Successfully prepared site in $OUTPUT_DIR/"
+          ls -la "$OUTPUT_DIR/"
           test -f "$OUTPUT_DIR/index.html"
 
       - name: Upload artifact
