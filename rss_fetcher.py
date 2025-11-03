@@ -3,6 +3,7 @@
 import feedparser
 from datetime import datetime, timedelta
 from dateutil import parser as date_parser
+from dateutil.relativedelta import relativedelta
 from typing import List, Dict, Optional
 import logging
 
@@ -41,7 +42,8 @@ class RSSFetcher:
     
     def __init__(self, months_back: int = 12):
         self.months_back = months_back
-        self.cutoff_date = datetime.now() - timedelta(days=30 * months_back)
+        # Use relativedelta for accurate month calculation
+        self.cutoff_date = datetime.now() - relativedelta(months=months_back)
     
     def fetch_feed(self, feed_url: str, source_name: str) -> List[Article]:
         """Fetch and parse a single RSS feed."""

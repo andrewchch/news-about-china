@@ -4,6 +4,7 @@ import spacy
 from typing import List
 import logging
 from rss_fetcher import Article
+from config import SENTIMENT_THRESHOLDS, SENTIMENT_NORMALIZATION_FACTOR
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -84,7 +85,8 @@ class SentimentAnalyzer:
         
         # Normalize score to -1 to 1 range
         if total_words > 0:
-            normalized_score = sentiment_score / max(total_words * 0.1, 1)
+            # Use configurable normalization factor for sensitivity
+            normalized_score = sentiment_score / max(total_words * SENTIMENT_NORMALIZATION_FACTOR, 1)
             # Clamp between -1 and 1
             normalized_score = max(-1, min(1, normalized_score))
         else:
@@ -93,14 +95,14 @@ class SentimentAnalyzer:
         return normalized_score
     
     def get_sentiment_label(self, score: float) -> str:
-        """Convert sentiment score to a label."""
-        if score >= 0.5:
+        """Convert sentiment score to a label using configured thresholds."""
+        if score >= SENTIMENT_THRESHOLDS["very_positive"]:
             return "very_positive"
-        elif score >= 0.1:
+        elif score >= SENTIMENT_THRESHOLDS["positive"]:
             return "positive"
-        elif score >= -0.1:
+        elif score >= SENTIMENT_THRESHOLDS["neutral"]:
             return "neutral"
-        elif score >= -0.5:
+        elif score >= SENTIMENT_THRESHOLDS["negative"]:
             return "negative"
         else:
             return "very_negative"

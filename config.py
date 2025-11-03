@@ -10,19 +10,23 @@ RSS_FEEDS = {
     "New York Times": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
 }
 
-# Keywords to identify China-related articles
+# Keywords to identify China-related articles (all lowercase for case-insensitive matching)
 CHINA_KEYWORDS = [
-    "china", "chinese", "beijing", "xi jinping", "ccp",
-    "taiwan", "hong kong", "xinjiang", "tibet", "shanghai"
+    "china", "chinese", "beijing", "xi jinping", "xi", "ccp",
+    "taiwan", "taiwanese", "hong kong", "xinjiang", "tibet", 
+    "shanghai", "guangzhou", "shenzhen", "prc", "people's republic"
 ]
 
-# Sentiment thresholds
+# Sentiment thresholds for classification
 SENTIMENT_THRESHOLDS = {
     "very_positive": 0.5,
     "positive": 0.1,
     "neutral": -0.1,
     "negative": -0.5,
 }
+
+# Sentiment normalization factor (lower = more sensitive to sentiment words)
+SENTIMENT_NORMALIZATION_FACTOR = 0.1
 
 # Number of months to look back
 MONTHS_TO_ANALYZE = 12
