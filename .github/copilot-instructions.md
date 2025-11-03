@@ -168,7 +168,7 @@ The project uses GitHub Actions for automated deployment:
 1. **Don't** hardcode dates or time windows - use `MONTHS_TO_ANALYZE`
 2. **Don't** use print statements - use the logging framework
 3. **Don't** assume RSS feeds will always be available - handle errors gracefully
-4. **Don't** modify the `Article` namedtuple structure without updating all consumers
+4. **Don't** modify the `Article` class structure without updating all consumers
 5. **Don't** forget to update documentation when changing configuration options
 
 ## File Organization
