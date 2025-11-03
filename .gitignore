@@ -26,4 +26,5 @@ htmlcov/
 docs/_build/
 output/
 site/
+site_test/
 .DS_Store
