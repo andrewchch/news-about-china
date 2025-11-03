@@ -1,7 +1,7 @@
 """Module for fetching and parsing RSS feeds."""
 
 import feedparser
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dateutil import parser as date_parser
 from dateutil.relativedelta import relativedelta
 from typing import List, Dict, Optional
@@ -18,7 +18,11 @@ class Article:
                  description: str, source: str):
         self.title = title
         self.link = link
-        self.published = published
+        # Normalize published datetime to timezone-aware UTC
+        if published.tzinfo is None:
+            self.published = published.replace(tzinfo=timezone.utc)
+        else:
+            self.published = published.astimezone(timezone.utc)
         self.description = description
         self.source = source
         self.sentiment_score = None
@@ -43,7 +47,7 @@ class RSSFetcher:
     def __init__(self, months_back: int = 12):
         self.months_back = months_back
         # Use relativedelta for accurate month calculation
-        self.cutoff_date = datetime.now() - relativedelta(months=months_back)
+        self.cutoff_date = datetime.now(timezone.utc) - relativedelta(months=months_back)
     
     def fetch_feed(self, feed_url: str, source_name: str) -> List[Article]:
         """Fetch and parse a single RSS feed."""
@@ -76,8 +80,13 @@ class RSSFetcher:
             pub_date_str = entry.get("published") or entry.get("updated")
             if pub_date_str:
                 pub_date = date_parser.parse(pub_date_str)
+                # Ensure timezone-aware UTC
+                if pub_date.tzinfo is None:
+                    pub_date = pub_date.replace(tzinfo=timezone.utc)
+                else:
+                    pub_date = pub_date.astimezone(timezone.utc)
             else:
-                pub_date = datetime.now()
+                pub_date = datetime.now(timezone.utc)
             
             return Article(title, link, pub_date, description, source_name)
             

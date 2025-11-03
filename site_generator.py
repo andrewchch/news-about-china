@@ -4,7 +4,7 @@ import os
 from typing import Dict, List
 from jinja2 import Template
 from rss_fetcher import Article
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 import logging
 
@@ -60,7 +60,7 @@ class SiteGenerator:
         html = self._get_index_template().render(
             sources=source_stats,
             total_articles=sum(s["count"] for s in source_stats),
-            generation_date=datetime.now().strftime("%Y-%m-%d %H:%M UTC")
+            generation_date=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
         )
         
         output_path = os.path.join(self.output_dir, "index.html")
