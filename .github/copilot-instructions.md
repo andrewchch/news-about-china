@@ -75,10 +75,15 @@ from config import RSS_FEEDS
 
 ### Article Object
 
-Use the `Article` namedtuple from `rss_fetcher.py` for consistency:
+Use the `Article` class from `rss_fetcher.py` for consistency:
 ```python
 Article(title, link, published, description, source)
 ```
+
+The Article class includes:
+- Core attributes: `title`, `link`, `published`, `description`, `source`
+- Sentiment attributes (set by analyzer): `sentiment_score`, `sentiment_label`
+- Helper method: `to_dict()` for serialization
 
 ### Date Handling
 
@@ -124,11 +129,12 @@ When adding new features, prefer configuration over hardcoding.
 
 ## Testing
 
-- Use `test_example.py` as a reference for testing patterns
-- Create sample `Article` objects for unit tests
+- `test_example.py` demonstrates the system with sample data (not a unit test file)
+- Create sample `Article` objects for testing
 - Test each component independently
 - Mock external dependencies (RSS feeds) where appropriate
 - Focus on testing core logic rather than integration
+- Add proper unit tests using a testing framework (pytest recommended) if needed
 
 ## GitHub Actions
 
