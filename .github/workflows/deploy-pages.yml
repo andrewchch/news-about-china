@@ -58,7 +58,9 @@ jobs:
           for d in site output public build docs; do
             if [ -d "$d" ] && [ "$d" != "$OUTPUT_DIR" ] && [ -n "$(ls -A "$d" 2>/dev/null)" ]; then
               echo "Copying contents from $d/ to $OUTPUT_DIR/"
-              cp -a "$d"/. "$OUTPUT_DIR"/ || true
+              if ! cp -a "$d"/. "$OUTPUT_DIR"/; then
+                echo "Warning: Failed to copy from $d/, continuing..."
+              fi
             fi
           done
 
