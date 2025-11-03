@@ -74,6 +74,7 @@ jobs:
           
           echo "Successfully prepared site in $OUTPUT_DIR/"
           ls -la "$OUTPUT_DIR/"
+          test -f "$OUTPUT_DIR/index.html"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
