@@ -14,9 +14,12 @@ logger = logging.getLogger(__name__)
 class SentimentAnalyzer:
     """Analyzes sentiment of articles using spaCy."""
     
-    def __init__(self, keywords: List[str]):
-        # Note: keywords parameter is kept for backward compatibility but not used
-        # Filtering now specifically requires "China" or "Xi" regardless of keywords list
+    def __init__(self, keywords: List[str] = None):
+        # Note: keywords parameter is deprecated and no longer used for filtering.
+        # Previously, the filter accepted any keyword from the provided list.
+        # Now, filtering specifically requires "China" or "Xi" to be present,
+        # regardless of the keywords list, to ensure articles are China-focused.
+        # The parameter is kept optional for backward compatibility.
         logger.info("Loading spaCy model...")
         try:
             self.nlp = spacy.load("en_core_web_sm")
