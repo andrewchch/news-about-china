@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBC News - China News Sentiment</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .summary {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .article-card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 5px solid #ddd;
+        }
+        .article-card.very_positive { border-left-color: #28a745; }
+        .article-card.positive { border-left-color: #90ee90; }
+        .article-card.neutral { border-left-color: #ffc107; }
+        .article-card.negative { border-left-color: #ff9999; }
+        .article-card.very_negative { border-left-color: #dc3545; }
+        
+        .article-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .article-title a {
+            color: #333;
+            text-decoration: none;
+        }
+        .article-title a:hover {
+            color: #007bff;
+        }
+        .article-meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .article-description {
+            color: #555;
+            margin: 10px 0;
+        }
+        .sentiment-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .sentiment-badge.very_positive { background: #28a745; color: white; }
+        .sentiment-badge.positive { background: #90ee90; color: black; }
+        .sentiment-badge.neutral { background: #ffc107; color: black; }
+        .sentiment-badge.negative { background: #ff9999; color: black; }
+        .sentiment-badge.very_negative { background: #dc3545; color: white; }
+        
+        .sentiment-score {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Overview</a>
+    
+    <h1>BBC News</h1>
+    
+    <div class="summary">
+        <p><strong>Total Articles:</strong> 3</p>
+        <p><strong>Average Sentiment:</strong> 0.529</p>
+        <p>Articles are sorted by sentiment score (most positive first).</p>
+    </div>
+    
+    <h2>Articles</h2>
+    
+    
+    <div class="article-card very_positive">
+        <div class="article-title">
+            <a href="https://example.com/article1" target="_blank" rel="noopener noreferrer">
+                China announces major economic reforms
+            </a>
+        </div>
+        
+        <div class="article-meta">
+            Published: 2025-10-04
+        </div>
+        
+        <div class="article-description">
+            China has unveiled a comprehensive package of economic reforms aimed at boosting growth and innovation in key sectors.
+        </div>
+        
+        <div>
+            <span class="sentiment-badge very_positive">
+                Very Positive
+            </span>
+            <span class="sentiment-score">Score: 1</span>
+        </div>
+    </div>
+    
+    <div class="article-card very_positive">
+        <div class="article-title">
+            <a href="https://example.com/article3" target="_blank" rel="noopener noreferrer">
+                Beijing hosts successful international summit
+            </a>
+        </div>
+        
+        <div class="article-meta">
+            Published: 2025-10-29
+        </div>
+        
+        <div class="article-description">
+            Leaders from around the world gathered in Beijing for a landmark summit on climate cooperation, marking a significant diplomatic achievement.
+        </div>
+        
+        <div>
+            <span class="sentiment-badge very_positive">
+                Very Positive
+            </span>
+            <span class="sentiment-score">Score: 0.588</span>
+        </div>
+    </div>
+    
+    <div class="article-card neutral">
+        <div class="article-title">
+            <a href="https://example.com/article2" target="_blank" rel="noopener noreferrer">
+                Tensions rise over Taiwan strait incident
+            </a>
+        </div>
+        
+        <div class="article-meta">
+            Published: 2025-10-19
+        </div>
+        
+        <div class="article-description">
+            Military tensions escalated today following reports of increased activity near Taiwan, raising concerns among international observers.
+        </div>
+        
+        <div>
+            <span class="sentiment-badge neutral">
+                Neutral
+            </span>
+            <span class="sentiment-score">Score: 0.0</span>
+        </div>
+    </div>
+    
+    
+    <footer>
+        <p><a href="index.html">Back to Overview</a></p>
+    </footer>
+</body>
+</html>
