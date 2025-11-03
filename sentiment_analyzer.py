@@ -1,6 +1,7 @@
 """Module for sentiment analysis using spaCy."""
 
 import spacy
+import re
 from typing import List
 import logging
 from rss_fetcher import Article
@@ -13,8 +14,12 @@ logger = logging.getLogger(__name__)
 class SentimentAnalyzer:
     """Analyzes sentiment of articles using spaCy."""
     
-    def __init__(self, keywords: List[str]):
-        self.keywords = [kw.lower() for kw in keywords]
+    def __init__(self, keywords: List[str] = None):
+        # Note: keywords parameter is deprecated and no longer used for filtering.
+        # Previously, the filter accepted any keyword from the provided list.
+        # Now, filtering specifically requires "China" or "Xi" to be present,
+        # regardless of the keywords list, to ensure articles are China-focused.
+        # The parameter is kept optional for backward compatibility.
         logger.info("Loading spaCy model...")
         try:
             self.nlp = spacy.load("en_core_web_sm")
@@ -29,9 +34,16 @@ class SentimentAnalyzer:
             self.nlp.add_pipe("sentencizer")
     
     def contains_china_reference(self, text: str) -> bool:
-        """Check if text contains any China-related keywords."""
+        """
+        Check if text contains 'China' or 'Xi' (case-insensitive).
+        Uses word boundaries for 'Xi' to avoid matching words like 'exist', 'maximum', etc.
+        """
         text_lower = text.lower()
-        return any(keyword in text_lower for keyword in self.keywords)
+        # Check for "china" anywhere in the text (it's specific enough)
+        has_china = "china" in text_lower
+        # Check for "xi" as a separate word using word boundaries
+        has_xi = bool(re.search(r'\bxi\b', text_lower))
+        return has_china or has_xi
     
     def filter_china_articles(self, articles: List[Article]) -> List[Article]:
         """Filter articles that mention China or related keywords."""
