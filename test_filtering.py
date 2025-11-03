@@ -65,6 +65,30 @@ def test_filtering():
             "should_pass": True,
             "reason": "contains 'xi' in description"
         },
+        # Should FAIL - contains "exist" but not "xi" as a word
+        {
+            "article": Article(
+                title="Trade negotiations exist between nations",
+                link="https://example.com/11",
+                published=datetime.now(),
+                description="Various agreements exist in the region",
+                source="Test"
+            ),
+            "should_pass": False,
+            "reason": "contains 'exist' but not 'xi' as a separate word"
+        },
+        # Should FAIL - contains "maximum" but not "xi" as a word
+        {
+            "article": Article(
+                title="Maximum economic growth expected",
+                link="https://example.com/12",
+                published=datetime.now(),
+                description="Analysts predict maximum returns",
+                source="Test"
+            ),
+            "should_pass": False,
+            "reason": "contains 'maximum' but not 'xi' as a separate word"
+        },
         # Should FAIL - only contains "Beijing" (no "China" or "Xi")
         {
             "article": Article(
