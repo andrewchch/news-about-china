@@ -29,9 +29,9 @@ class SentimentAnalyzer:
             self.nlp.add_pipe("sentencizer")
     
     def contains_china_reference(self, text: str) -> bool:
-        """Check if text contains any China-related keywords."""
+        """Check if text contains 'China' or 'Xi' (case-insensitive)."""
         text_lower = text.lower()
-        return any(keyword in text_lower for keyword in self.keywords)
+        return "china" in text_lower or "xi" in text_lower
     
     def filter_china_articles(self, articles: List[Article]) -> List[Article]:
         """Filter articles that mention China or related keywords."""
