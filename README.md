@@ -90,11 +90,21 @@ The site is automatically generated and deployed via GitHub Actions:
 1. **Enable GitHub Pages**:
    - Go to repository Settings → Pages
    - Source: GitHub Actions
+   - Save the settings
 
 2. **Automatic Updates**:
    - Runs daily at 00:00 UTC
    - Can be manually triggered from the Actions tab
    - Triggered on pushes to the main branch
+
+3. **First Time Setup**:
+   - After enabling GitHub Pages, go to Actions tab
+   - Click "Generate News Sentiment Site" workflow
+   - Click "Run workflow" to trigger the first build
+   - Wait 3-5 minutes for deployment
+   - Access your site at `https://<username>.github.io/news-about-china/`
+
+For detailed setup and customization instructions, see [SETUP.md](SETUP.md).
 
 ## How It Works
 
