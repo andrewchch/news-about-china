@@ -15,12 +15,11 @@ class SentimentAnalyzer:
     """Analyzes sentiment of articles using spaCy."""
     
     def __init__(self, keywords: List[str]):
-        keywords_lower = [kw.lower() for kw in keywords]
-        self.keywords = keywords_lower
+        self.keywords = [kw.lower() for kw in keywords]
         # Compile regex patterns with word boundaries for whole-word matching
         self.keyword_patterns = [
-            re.compile(r'\b' + re.escape(kw) + r'\b')
-            for kw in keywords_lower
+            re.compile(rf'\b{re.escape(kw)}\b', re.IGNORECASE)
+            for kw in self.keywords
         ]
         logger.info("Loading spaCy model...")
         try:
@@ -37,8 +36,7 @@ class SentimentAnalyzer:
     
     def contains_china_reference(self, text: str) -> bool:
         """Check if text contains any China-related keywords as whole words."""
-        text_lower = text.lower()
-        return any(pattern.search(text_lower) for pattern in self.keyword_patterns)
+        return any(pattern.search(text) for pattern in self.keyword_patterns)
     
     def filter_china_articles(self, articles: List[Article]) -> List[Article]:
         """Filter articles that mention China or related keywords."""
