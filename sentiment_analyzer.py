@@ -1,5 +1,6 @@
 """Module for sentiment analysis using spaCy."""
 
+import re
 import spacy
 from typing import List
 import logging
@@ -15,6 +16,11 @@ class SentimentAnalyzer:
     
     def __init__(self, keywords: List[str]):
         self.keywords = [kw.lower() for kw in keywords]
+        # Compile regex patterns with word boundaries for whole-word matching
+        self.keyword_patterns = [
+            re.compile(rf'\b{re.escape(kw)}\b', re.IGNORECASE)
+            for kw in self.keywords
+        ]
         logger.info("Loading spaCy model...")
         try:
             self.nlp = spacy.load("en_core_web_sm")
@@ -29,9 +35,8 @@ class SentimentAnalyzer:
             self.nlp.add_pipe("sentencizer")
     
     def contains_china_reference(self, text: str) -> bool:
-        """Check if text contains any China-related keywords."""
-        text_lower = text.lower()
-        return any(keyword in text_lower for keyword in self.keywords)
+        """Check if text contains any China-related keywords as whole words."""
+        return any(pattern.search(text) for pattern in self.keyword_patterns)
     
     def filter_china_articles(self, articles: List[Article]) -> List[Article]:
         """Filter articles that mention China or related keywords."""

@@ -68,6 +68,45 @@ def create_sample_articles():
     }
     return articles
 
+def test_keyword_word_boundary_matching():
+    """Test that keyword matching only matches whole words, not substrings."""
+    print("=" * 60)
+    print("Testing Keyword Word Boundary Matching")
+    print("=" * 60)
+
+    analyzer = SentimentAnalyzer(CHINA_KEYWORDS)
+
+    # Should NOT match: "xi" is a substring of "xiv" (as in "Pope Leo XIV")
+    assert not analyzer.contains_china_reference("Pope Leo XIV announces new doctrine"), \
+        "'xi' should not match inside 'XIV'"
+    print("✓ Test 1 passed: 'xi' does not match inside 'XIV'")
+
+    # Should NOT match: "china" inside "machinery"
+    assert not analyzer.contains_china_reference("The machinery industry grew this year"), \
+        "'china' should not match inside 'machinery'"
+    print("✓ Test 2 passed: 'china' does not match inside 'machinery'")
+
+    # Should match: standalone keyword
+    assert analyzer.contains_china_reference("Xi Jinping addressed the nation"), \
+        "'xi' should match as a standalone word"
+    print("✓ Test 3 passed: 'xi' matches as a standalone word")
+
+    # Should match: keyword at start of sentence
+    assert analyzer.contains_china_reference("China announced new trade policies"), \
+        "'china' should match as a standalone word"
+    print("✓ Test 4 passed: 'china' matches as a standalone word")
+
+    # Should match: multi-word keyword
+    assert analyzer.contains_china_reference("Tensions rise over Taiwan strait"), \
+        "'taiwan' should match as a standalone word"
+    print("✓ Test 5 passed: 'taiwan' matches as a standalone word")
+
+    print("=" * 60)
+    print("✅ All keyword word boundary tests passed!")
+    print("=" * 60)
+    print()
+
+
 def test_timezone_normalization():
     """Test timezone-aware datetime normalization."""
     print("=" * 60)
@@ -133,6 +172,9 @@ def main():
     """Test the sentiment analysis pipeline with sample data."""
     # Run timezone normalization tests first
     test_timezone_normalization()
+
+    # Run keyword word boundary matching tests
+    test_keyword_word_boundary_matching()
     
     print("=" * 60)
     print("Testing China News Sentiment Analysis")
