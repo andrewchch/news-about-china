@@ -217,6 +217,15 @@ class SiteGenerator:
         }
     </style>
 </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SGCZ0W9FDC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-SGCZ0W9FDC');
+</script>
 <body>
     <h1>🌏 China News Sentiment Analysis</h1>
     
